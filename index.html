@@ -1,0 +1,116 @@
+﻿<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8" />
+    <title>Wolf and dogs</title>
+    <style>
+        body {
+            margin: 0;
+            padding: 0;
+            display: flex;
+            flex-direction: row;
+            height: 100vh; /* 100% viewport height */
+        }
+
+        #left-panel {
+            flex:  0 0 30% ; /* 5% height, do not grow or shrink */
+        }
+
+        #right-panel {
+            flex: 1; /* Take remaining height */
+            display: flex;
+          
+        }
+    </style>
+    <script src="js/Animals.js"></script>
+    <script src="js/Calc.js"></script>
+    <script src="js/MouseMoveHandler.js"></script>
+    <script>
+        document.onreadystatechange = function () {
+            if (document.readyState == "complete") {
+                setStartPosition();
+            }
+        }
+        function setStartPosition() {
+            let offset = 5;
+            let mh = new MouseMoveHandler(pnlCanvas,offset);
+            mh.drawWolfBorder();
+            //set wolf in the center
+            let w = pnlCanvas.width;
+            let wolfColor = "red";
+            let dogColor = "blue";
+            let radius = 5
+            let left = 0; //pnlCanvas.Left;
+            let top = 0;// pnlCanvas.Top;
+            let cx = w / 2;
+            let cy = w / 2;
+            let wolf = new Wolf(cx, cy, wolfColor, radius, 1, pnlCanvas);
+            wolf.draw();
+            mh.wolf = wolf;
+            //create dogs
+            let dogs = [];
+            let calc = new Calc(dogs, pnlCanvas);
+            mh.calc = calc;
+            let offset1 = 6;
+            for (let i = 0; i < 4; i++) {
+                switch (i) {
+                    case 0: //left, top
+                        cx = left + offset1;
+                        cy = top + offset1;
+                        break;
+                    case 1: //right,top
+                        cx = left + w - offset1;
+                        cy = top + offset1;
+                        break;
+                    case 2: //right, bottom
+                        cx = left + w - offset1;
+                        cy = top + w- offset1;
+                        break;
+                    case 3: //left, bottpm
+                        cx = left + offset1;
+                        cy = top + w - offset1;
+                        break;
+                }
+                dogs.push(new Dog(cx, cy, dogColor, radius, 1, pnlCanvas));
+                dogs[i].number = i;
+                dogs[i].draw();
+            }
+            mh.dogs = dogs;
+        }
+    </script>
+</head>
+<body>
+    
+    <div id="left-panel" style="margin-left:100px">
+        <h3 style="text-align:left;">Wolf and dogs</h3>
+        <!--<input id="btnStart" type="button" value="Start"
+               onclick="setStartPosition()" />
+        <br />-->
+        <canvas id="pnlCanvas" width="400" height="400"></canvas>
+    </div>
+    <div id="right-panel" style="font-size: smaller; text-align: left;width:200px">
+
+        <p style="width:1000px;text-align:left; margin-left:100px;margin-right:50px">
+            В центре квадрата находится волк, а в вершинах квадрата — четыре собаки.
+            Волк может бегать по всему квадрату, а собаки — только по его периферии.
+            Волк легко может справиться с собакой, но одолеть двух собак он не в состоянии.
+            Если собаки  двигаются со скоростью, превышающей в 1,5 раза скорость волка,
+            то они могут не выпустить волка из пределов квадрата.<br />
+            Начните двигать волка с помощью мыши.
+
+            <br /> <br /><br />
+
+            There is a wolf in the center of the square, and four
+            dogs at the vertices of the square. A wolf can run around the entire square,
+            but dogs can only run around its periphery. A wolf can easily cope with a dog,
+            but he is not able to defeat two dogs. If the dogs move at a speed 1.5 times
+            the speed of the wolf, then they may not let the wolf out of the square.<br />
+            Start moving the wolf with your mouse.
+            <br /> <br /><br />
+            <input id="chkTip" type="checkbox" />
+            <label for="chkTip">Show tip</label>
+        </p>
+    </div>
+
+</body>
+</html>
